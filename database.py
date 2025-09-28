@@ -79,3 +79,29 @@ def eliminar_gasto(id_gasto):
     conn.close()
     print(f"Gasto con ID {id_gasto} eliminado.")
 
+def editar_gasto(id_gasto, nuevo_monto, nueva_categoria, nueva_descripcion):
+    """Actualiza un registro de gasto existente en la base de datos."""
+    conn = conectar_db()
+    cursor = conn.cursor()
+    
+    # El comando UPDATE modifica las columnas de la fila que cumpla la condición WHERE.
+    cursor.execute("""
+        UPDATE gastos 
+        SET monto = ?, categoria = ?, descripcion = ?
+        WHERE id = ?
+    """, (nuevo_monto, nueva_categoria, nueva_descripcion, id_gasto))
+    
+    conn.commit()
+    conn.close()
+    print(f"Gasto con ID {id_gasto} actualizado.")
+
+def obtener_gasto_por_id(id_gasto):
+    """Obtiene y devuelve un único gasto por su ID."""
+    conn = conectar_db()
+    cursor = conn.cursor()
+    
+    cursor.execute("SELECT * FROM gastos WHERE id = ?", (id_gasto,))
+    gasto = cursor.fetchone() # fetchone() devuelve solo un registro
+    
+    conn.close()
+    return gasto
